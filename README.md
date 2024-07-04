@@ -20,3 +20,16 @@ Adventure Game is a simple text-based game where the player navigates through di
 - `inventory`: Show your current inventory.
 - `quit`: Exit the game.
 
+## How to Run the Game
+
+1. **Clone the Repository:**
+
+   git clone <repository-url>
+   cd adventure_game
+
+2. **Run the game:**
+
+   python3 game.py
+
+# Contributors
+- [Vadym Makohon](https://github.com/VadymMakohon)
