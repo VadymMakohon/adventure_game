@@ -7,7 +7,7 @@ def main():
     player = Player()
     rooms = {
         "kitchen": Room("Kitchen", "You are in a kitchen. There is a door to the north.", {"north": "hall"}),
-        "hall": Room("Hall", "You are in a hall. There are doors to the south and east.", {"south": "kitchen", "east": "living room"}),
+        "hall": Room("Hall", "You are in a hall. There are doors to the south and east.", {"south": "kitchen", "east": "living_room"}),
         "living_room": Room("Living Room", "You are in a living room. There is a door to the west.", {"west": "hall"}),
     }
     
