@@ -19,3 +19,4 @@ Adventure Game is a simple text-based game where the player navigates through di
 - `take key`: Pick up the key in the current room.
 - `inventory`: Show your current inventory.
 - `quit`: Exit the game.
+
