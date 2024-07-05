@@ -33,13 +33,43 @@ def main():
                 print(f"You took the {item.name}.")
             else:
                 print(f"There is no {item_name} here.")
+        elif command.startswith("drop "):
+            item_name = command[5:]
+            item = player.remove_item(item_name)
+            if item:
+                current_room.add_item(item)
+                print(f"You dropped the {item.name}.")
+            else:
+                print(f"You don't have a {item_name}.")
+        elif command.startswith("inspect "):
+            item_name = command[8:]
+            item = player.get_item(item_name)
+            if item:
+                print(f"{item.name}: {item.description}")
+            else:
+                print(f"You don't have a {item_name}.")
+        elif command == "look":
+            current_room.show_items()
         elif command == "inventory":
             player.show_inventory()
+        elif command == "help":
+            show_help()
         elif command == "quit":
             print("Thanks for playing!")
             break
         else:
             print("I don't understand that command.")
+
+def show_help():
+    print("Available commands:")
+    print(" - north, south, east, west: Move in the specified direction.")
+    print(" - take [item]: Take an item from the room.")
+    print(" - drop [item]: Drop an item into the room.")
+    print(" - inspect [item]: Inspect an item in your inventory.")
+    print(" - look: Look around the room.")
+    print(" - inventory: Show your inventory.")
+    print(" - help: Show this help message.")
+    print(" - quit: Quit the game.")
 
 if __name__ == "__main__":
     main()
