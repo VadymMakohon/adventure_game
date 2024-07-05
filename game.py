@@ -7,7 +7,7 @@ def main():
     player = Player()
     rooms = {
         "kitchen": Room("Kitchen", "You are in a kitchen. There is a door to the north.", {"north": "hall"}),
-        "hall": Room("Hall", "You are in a hall. There are doors to the south and east.", {"south": "kitchen", "east": "living_room"}),
+        "hall": Room("Hall", "You are in a hall. There are doors to the south and east.", {"south": "kitchen", "east": "living_room"}, locked=True, puzzle={"question": "What is 2+2?", "answer": "4"}),
         "living_room": Room("Living Room", "You are in a living room. There is a door to the west.", {"west": "hall"}),
     }
     
@@ -22,7 +22,14 @@ def main():
         
         if command in ["north", "south", "east", "west"]:
             if command in current_room.exits:
-                current_room = rooms[current_room.exits[command]]
+                next_room = rooms[current_room.exits[command]]
+                if next_room.locked:
+                    print("The door is locked. Solve the puzzle to unlock it:")
+                    print(next_room.puzzle['question'])
+                    answer = input("> ").strip()
+                    next_room.solve_puzzle(answer)
+                if not next_room.locked:
+                    current_room = next_room
             else:
                 print("You can't go that way.")
         elif command.startswith("take "):
