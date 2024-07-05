@@ -1,6 +1,7 @@
 from rooms import Room
 from player import Player
 from items import Item
+from npc import NPC
 
 def main():
     # Initialize game elements
@@ -8,7 +9,7 @@ def main():
     rooms = {
         "kitchen": Room("Kitchen", "You are in a kitchen. There is a door to the north.", {"north": "hall"}),
         "hall": Room("Hall", "You are in a hall. There are doors to the south and east.", {"south": "kitchen", "east": "living_room"}, locked=True, puzzle={"question": "What is 2+2?", "answer": "4"}),
-        "living_room": Room("Living Room", "You are in a living room. There is a door to the west.", {"west": "hall"}),
+        "living_room": Room("Living Room", "You are in a living room. There is a door to the west.", {"west": "hall"}, npc=NPC("John", "Hello, adventurer! I have a quest for you.")),
     }
     
     # Add items to rooms
@@ -57,6 +58,8 @@ def main():
                 print(f"You don't have a {item_name}.")
         elif command == "look":
             current_room.show_items()
+        elif command == "talk":
+            current_room.interact_with_npc()
         elif command == "inventory":
             player.show_inventory()
         elif command == "help":
@@ -74,6 +77,7 @@ def show_help():
     print(" - drop [item]: Drop an item into the room.")
     print(" - inspect [item]: Inspect an item in your inventory.")
     print(" - look: Look around the room.")
+    print(" - talk: Talk to an NPC if one is present.")
     print(" - inventory: Show your inventory.")
     print(" - help: Show this help message.")
     print(" - quit: Quit the game.")
