@@ -14,3 +14,11 @@ class Room:
                 self.items.remove(item)
                 return item
         return None
+
+    def show_items(self):
+        if self.items:
+            print("You see the following items:")
+            for item in self.items:
+                print(f" - {item.name}")
+        else:
+            print("There are no items here.")
