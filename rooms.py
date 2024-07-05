@@ -1,9 +1,11 @@
 class Room:
-    def __init__(self, name, description, exits):
+    def __init__(self, name, description, exits, locked=False, puzzle=None):
         self.name = name
         self.description = description
         self.exits = exits
         self.items = []
+        self.locked = locked
+        self.puzzle = puzzle
 
     def add_item(self, item):
         self.items.append(item)
@@ -22,3 +24,10 @@ class Room:
                 print(f" - {item.name}")
         else:
             print("There are no items here.")
+
+    def solve_puzzle(self, answer):
+        if self.puzzle and answer == self.puzzle['answer']:
+            self.locked = False
+            print("You solved the puzzle! The door is now unlocked.")
+        else:
+            print("That's not correct.")
