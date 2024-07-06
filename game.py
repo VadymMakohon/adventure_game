@@ -2,8 +2,12 @@ from rooms import Room
 from player import Player
 from items import Item
 from npc import NPC
+from colorama import Fore, Back, Style, init
 
 def main():
+    # Initialize colorama
+    init(autoreset=True)
+
     # Initialize game elements
     player = Player()
     rooms = {
@@ -18,44 +22,44 @@ def main():
     # Game loop
     current_room = rooms["kitchen"]
     while True:
-        print(current_room.description)
-        command = input("> ").strip().lower()
+        print(Fore.CYAN + current_room.description)
+        command = input(Fore.YELLOW + "> ").strip().lower()
         
         if command in ["north", "south", "east", "west"]:
             if command in current_room.exits:
                 next_room = rooms[current_room.exits[command]]
                 if next_room.locked:
-                    print("The door is locked. Solve the puzzle to unlock it:")
-                    print(next_room.puzzle['question'])
-                    answer = input("> ").strip()
+                    print(Fore.RED + "The door is locked. Solve the puzzle to unlock it:")
+                    print(Fore.MAGENTA + next_room.puzzle['question'])
+                    answer = input(Fore.YELLOW + "> ").strip()
                     next_room.solve_puzzle(answer)
                 if not next_room.locked:
                     current_room = next_room
             else:
-                print("You can't go that way.")
+                print(Fore.RED + "You can't go that way.")
         elif command.startswith("take "):
             item_name = command[5:]
             item = current_room.take_item(item_name)
             if item:
                 player.add_item(item)
-                print(f"You took the {item.name}.")
+                print(Fore.GREEN + f"You took the {item.name}.")
             else:
-                print(f"There is no {item_name} here.")
+                print(Fore.RED + f"There is no {item_name} here.")
         elif command.startswith("drop "):
             item_name = command[5:]
             item = player.remove_item(item_name)
             if item:
                 current_room.add_item(item)
-                print(f"You dropped the {item.name}.")
+                print(Fore.GREEN + f"You dropped the {item.name}.")
             else:
-                print(f"You don't have a {item_name}.")
+                print(Fore.RED + f"You don't have a {item_name}.")
         elif command.startswith("inspect "):
             item_name = command[8:]
             item = player.get_item(item_name)
             if item:
-                print(f"{item.name}: {item.description}")
+                print(Fore.GREEN + f"{item.name}: {item.description}")
             else:
-                print(f"You don't have a {item_name}.")
+                print(Fore.RED + f"You don't have a {item_name}.")
         elif command == "look":
             current_room.show_items()
         elif command == "talk":
@@ -65,22 +69,22 @@ def main():
         elif command == "help":
             show_help()
         elif command == "quit":
-            print("Thanks for playing!")
+            print(Fore.CYAN + "Thanks for playing!")
             break
         else:
-            print("I don't understand that command.")
+            print(Fore.RED + "I don't understand that command.")
 
 def show_help():
-    print("Available commands:")
-    print(" - north, south, east, west: Move in the specified direction.")
-    print(" - take [item]: Take an item from the room.")
-    print(" - drop [item]: Drop an item into the room.")
-    print(" - inspect [item]: Inspect an item in your inventory.")
-    print(" - look: Look around the room.")
-    print(" - talk: Talk to an NPC if one is present.")
-    print(" - inventory: Show your inventory.")
-    print(" - help: Show this help message.")
-    print(" - quit: Quit the game.")
+    print(Fore.CYAN + "Available commands:")
+    print(Fore.CYAN + " - north, south, east, west: Move in the specified direction.")
+    print(Fore.CYAN + " - take [item]: Take an item from the room.")
+    print(Fore.CYAN + " - drop [item]: Drop an item into the room.")
+    print(Fore.CYAN + " - inspect [item]: Inspect an item in your inventory.")
+    print(Fore.CYAN + " - look: Look around the room.")
+    print(Fore.CYAN + " - talk: Talk to an NPC if one is present.")
+    print(Fore.CYAN + " - inventory: Show your inventory.")
+    print(Fore.CYAN + " - help: Show this help message.")
+    print(Fore.CYAN + " - quit: Quit the game.")
 
 if __name__ == "__main__":
     main()
