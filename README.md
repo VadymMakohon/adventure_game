@@ -33,5 +33,14 @@ Adventure Game is a simple text-based game where the player navigates through di
 
    python3 game.py
 
+## Adding Colors with colorama
+In this modified code, the colorama library is used to add colors to the game text. Here are the color codes used:
+
+- Fore.CYAN: Cyan color for room descriptions and help messages.
+- Fore.YELLOW: Yellow color for input prompts.
+- Fore.RED: Red color for error messages and locked doors.
+- Fore.MAGENTA: Magenta color for puzzle questions.
+- Fore.GREEN: Green color for successful actions (like taking or dropping an item). 
+
 # Contributors
 - [Vadym Makohon](https://github.com/VadymMakohon)
