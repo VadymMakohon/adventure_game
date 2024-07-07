@@ -2,89 +2,100 @@ from rooms import Room
 from player import Player
 from items import Item
 from npc import NPC
-from colorama import Fore, Back, Style, init
+
+# ANSI escape codes for colors
+class Colors:
+    RESET = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
+    RED = '\033[91m'
+    GREEN = '\033[92m'
+    YELLOW = '\033[93m'
+    BLUE = '\033[94m'
+    MAGENTA = '\033[95m'
+    CYAN = '\033[96m'
 
 def main():
-    # Initialize colorama
-    init(autoreset=True)
-
     # Initialize game elements
     player = Player()
+
+    # Adding a puzzle to the living room door
     rooms = {
         "kitchen": Room("Kitchen", "You are in a kitchen. There is a door to the north.", {"north": "hall"}),
-        "hall": Room("Hall", "You are in a hall. There are doors to the south and east.", {"south": "kitchen", "east": "living_room"}, locked=True, puzzle={"question": "What is 2+2?", "answer": "4"}),
-        "living_room": Room("Living Room", "You are in a living room. There is a door to the west.", {"west": "hall"}, npc=NPC("John", "Hello, adventurer! I have a quest for you.")),
+        "hall": Room("Hall", "You are in a hall. There are doors to the south and east.", {"south": "kitchen", "east": "living_room"}),
+        "living_room": Room("Living Room", "You are in a living room. There is a door to the west.", {"west": "hall"}),
     }
-    
-    # Add items to rooms
-    rooms["kitchen"].add_item(Item("key", "A small rusty key."))
-    
-    # Game loop
+
+    # Puzzle question
+    puzzle_solved = False
+
+    def solve_puzzle():
+        nonlocal puzzle_solved
+        print(Colors.MAGENTA + "To enter the living room, solve this puzzle: What has keys but can't open locks?")
+        answer = input(Colors.YELLOW + "> ").strip().lower()
+        if answer == "piano":
+            puzzle_solved = True
+            print(Colors.GREEN + "Correct! You may enter the living room.")
+        else:
+            print(Colors.RED + "Incorrect. Try again.")
+
     current_room = rooms["kitchen"]
     while True:
-        print(Fore.CYAN + current_room.description)
-        command = input(Fore.YELLOW + "> ").strip().lower()
-        
+        print(Colors.CYAN + current_room.description)
+        command = input(Colors.YELLOW + "> ").strip().lower()
+
         if command in ["north", "south", "east", "west"]:
             if command in current_room.exits:
-                next_room = rooms[current_room.exits[command]]
-                if next_room.locked:
-                    print(Fore.RED + "The door is locked. Solve the puzzle to unlock it:")
-                    print(Fore.MAGENTA + next_room.puzzle['question'])
-                    answer = input(Fore.YELLOW + "> ").strip()
-                    next_room.solve_puzzle(answer)
-                if not next_room.locked:
-                    current_room = next_room
+                if current_room.name == "Hall" and command == "east" and not puzzle_solved:
+                    solve_puzzle()
+                    if puzzle_solved:
+                        current_room = rooms[current_room.exits[command]]
+                else:
+                    current_room = rooms[current_room.exits[command]]
             else:
-                print(Fore.RED + "You can't go that way.")
+                print(Colors.RED + "You can't go that way.")
         elif command.startswith("take "):
             item_name = command[5:]
             item = current_room.take_item(item_name)
             if item:
                 player.add_item(item)
-                print(Fore.GREEN + f"You took the {item.name}.")
+                print(Colors.GREEN + f"You took the {item.name}.")
             else:
-                print(Fore.RED + f"There is no {item_name} here.")
+                print(Colors.RED + f"There is no {item_name} here.")
+        elif command == "inventory":
+            player.show_inventory()
+        elif command == "look":
+            print(Colors.CYAN + current_room.description)
         elif command.startswith("drop "):
             item_name = command[5:]
             item = player.remove_item(item_name)
             if item:
                 current_room.add_item(item)
-                print(Fore.GREEN + f"You dropped the {item.name}.")
+                print(Colors.GREEN + f"You dropped the {item.name}.")
             else:
-                print(Fore.RED + f"You don't have a {item_name}.")
+                print(Colors.RED + f"You don't have {item_name}.")
         elif command.startswith("inspect "):
             item_name = command[8:]
             item = player.get_item(item_name)
             if item:
-                print(Fore.GREEN + f"{item.name}: {item.description}")
+                print(Colors.CYAN + f"{item.name}: {item.description}")
             else:
-                print(Fore.RED + f"You don't have a {item_name}.")
-        elif command == "look":
-            current_room.show_items()
-        elif command == "talk":
-            current_room.interact_with_npc()
-        elif command == "inventory":
-            player.show_inventory()
+                print(Colors.RED + f"You don't have {item_name}.")
         elif command == "help":
-            show_help()
+            print(Colors.CYAN + "Available commands:")
+            print(Colors.CYAN + " - north, south, east, west: Move in the specified direction.")
+            print(Colors.CYAN + " - take [item]: Take an item from the room.")
+            print(Colors.CYAN + " - drop [item]: Drop an item into the room.")
+            print(Colors.CYAN + " - inspect [item]: Inspect an item in your inventory.")
+            print(Colors.CYAN + " - look: Look around the room.")
+            print(Colors.CYAN + " - inventory: Show your inventory.")
+            print(Colors.CYAN + " - help: Show this help message.")
+            print(Colors.CYAN + " - quit: Quit the game.")
         elif command == "quit":
-            print(Fore.CYAN + "Thanks for playing!")
+            print("Thanks for playing!")
             break
         else:
-            print(Fore.RED + "I don't understand that command.")
-
-def show_help():
-    print(Fore.CYAN + "Available commands:")
-    print(Fore.CYAN + " - north, south, east, west: Move in the specified direction.")
-    print(Fore.CYAN + " - take [item]: Take an item from the room.")
-    print(Fore.CYAN + " - drop [item]: Drop an item into the room.")
-    print(Fore.CYAN + " - inspect [item]: Inspect an item in your inventory.")
-    print(Fore.CYAN + " - look: Look around the room.")
-    print(Fore.CYAN + " - talk: Talk to an NPC if one is present.")
-    print(Fore.CYAN + " - inventory: Show your inventory.")
-    print(Fore.CYAN + " - help: Show this help message.")
-    print(Fore.CYAN + " - quit: Quit the game.")
+            print(Colors.RED + "I don't understand that command.")
 
 if __name__ == "__main__":
     main()
