@@ -14,26 +14,24 @@ Adventure Game is a simple text-based game where the player navigates through di
 ## Setup
 1. Clone this repository.
 2. Navigate to the directory: `cd adventure_game`
-3. Run the game: `python3 game.py`
+3. Create a virtual environment: `python3 -m venv venv`
+4. Activate the virtual environment:
+   - On macOS and Linux: `source venv/bin/activate`
+   - On Windows: `venv\Scripts\activate`
+5. Install the required packages: `pip install colorama`
+6. Run the game: `python game.py`
 
 ## Example Commands
 - `north`: Move to the room to the north.
 - `take key`: Pick up the key in the current room.
 - `inventory`: Show your current inventory.
+- `look`: Look around the room.
+- `drop [item]`: Drop an item into the room.
+- `inspect [item]`: Inspect an item in your inventory.
+- `help`: Show available commands.
 - `quit`: Exit the game.
 
-## How to Run the Game
-
-1. **Clone the Repository:**
-
-   git clone <repository-url>
-   cd adventure_game
-
-2. **Run the game:**
-
-   python3 game.py
-
-## Adding Colors with colorama
+## Colors in the game
 In this modified code, the colorama library is used to add colors to the game text. Here are the color codes used:
 
 - Fore.CYAN: Cyan color for room descriptions and help messages.
