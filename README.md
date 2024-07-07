@@ -3,7 +3,7 @@
 ## Overview
 Adventure Game is a simple text-based game where the player navigates through different rooms in a house. Each room may have items to pick up or dangers to avoid. The goal is to find a key and escape the house.
 
-![Preview](https://github.com/VadymMakohon/adventure_game/assets/138728243/4697402c-a504-49d3-b240-4c9a8a85a4b1)
+![Preview](https://github.com/VadymMakohon/adventure_game/assets/138728243/56533d1e-b991-4ac1-95c1-8b552cd742d1)
 
 ## How to Play
 - Navigate through rooms by typing commands like `north`, `south`, `east`, or `west`.
