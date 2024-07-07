@@ -32,13 +32,13 @@ Adventure Game is a simple text-based game where the player navigates through di
 - `quit`: Exit the game.
 
 ## Colors in the game
-In this modified code, the colorama library is used to add colors to the game text. Here are the color codes used:
+In this modified code, ANSI escape codes are used to add colors to the game text. Here are the color codes used:
 
-- Fore.CYAN: Cyan color for room descriptions and help messages.
-- Fore.YELLOW: Yellow color for input prompts.
-- Fore.RED: Red color for error messages and locked doors.
-- Fore.MAGENTA: Magenta color for puzzle questions.
-- Fore.GREEN: Green color for successful actions (like taking or dropping an item). 
+- CYAN: Cyan color for room descriptions and help messages.
+- YELLOW: Yellow color for input prompts.
+- RED: Red color for error messages and locked doors.
+- MAGENTA: Magenta color for puzzle questions.
+- GREEN: Green color for successful actions (like taking or dropping an item). 
 
 # Contributors
 - [Vadym Makohon](https://github.com/VadymMakohon)
