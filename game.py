@@ -2,6 +2,7 @@ from rooms import Room
 from player import Player
 from items import Item, HealingPotion
 from npc import NPC
+from puzzles import get_random_puzzle
 
 # ANSI escape codes for colors
 class Colors:
@@ -15,6 +16,17 @@ class Colors:
     MAGENTA = '\033[95m'
     CYAN = '\033[96m'
 
+def solve_puzzle():
+    puzzle = get_random_puzzle()
+    print(Colors.MAGENTA + puzzle.question)
+    answer = input(Colors.YELLOW + "> ").strip().lower()
+    if answer == puzzle.answer:
+        print(Colors.GREEN + "Correct!")
+        return True
+    else:
+        print(Colors.RED + "Incorrect. Try again.")
+        return False
+
 def main():
     # Initialize game elements
     player = Player()
@@ -23,7 +35,7 @@ def main():
     rooms = {
         "kitchen": Room("Kitchen", "You are in a kitchen. There is a door to the north.", {"north": "hall"}),
         "hall": Room("Hall", "You are in a hall. There are doors to the south and east.", {"south": "kitchen", "east": "living_room"}),
-        "living_room": Room("Living Room", "You are in a living room. There is a door to the west.", {"west": "hall"})
+        "living_room": Room("Living Room", "You are in a living room. There is a door to the west.", {"west": "hall"}),
     }
 
     # Add items to rooms
@@ -33,32 +45,28 @@ def main():
     npc = NPC("Old Man", "An old man with a long beard.", "Beware of the dragon in the living room!")
     rooms["hall"].add_npc(npc)
 
-    # Puzzle question
     puzzle_solved = False
-
-    def solve_puzzle():
-        nonlocal puzzle_solved
-        print(Colors.MAGENTA + "To enter the living room, solve this puzzle: What has keys but can't open locks?")
-        answer = input(Colors.YELLOW + "> ").strip().lower()
-        if answer == "piano":
-            puzzle_solved = True
-            print(Colors.GREEN + "Correct! You may enter the living room.")
-        else:
-            print(Colors.RED + "Incorrect. Try again.")
 
     current_room = rooms["kitchen"]
     while True:
         current_room.describe()
         command = input(Colors.YELLOW + "> ").strip().lower()
 
+        if not solve_puzzle():
+            continue
+
         if command in ["north", "south", "east", "west"]:
             if command in current_room.exits:
                 if current_room.name == "Hall" and command == "east" and not puzzle_solved:
-                    solve_puzzle()
-                    if puzzle_solved:
-                        current_room = rooms[current_room.exits[command]]
-                else:
-                    current_room = rooms[current_room.exits[command]]
+                    print(Colors.MAGENTA + "To enter the living room, solve this puzzle: What has keys but can't open locks?")
+                    answer = input(Colors.YELLOW + "> ").strip().lower()
+                    if answer == "piano":
+                        puzzle_solved = True
+                        print(Colors.GREEN + "Correct! You may enter the living room.")
+                    else:
+                        print(Colors.RED + "Incorrect. Try again.")
+                        continue
+                current_room = rooms[current_room.exits[command]]
             else:
                 print(Colors.RED + "You can't go that way.")
         elif command.startswith("take "):
