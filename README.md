@@ -6,10 +6,16 @@ Adventure Game is a simple text-based game where the player navigates through di
 ![preview](https://github.com/user-attachments/assets/8b39bf24-27ba-4954-9544-f081efcbbce5)
 
 ## How to Play
-- Navigate through rooms by typing commands like `north`, `south`, `east`, or `west`.
-- Pick up items by typing `take <item>`.
-- View your inventory by typing `inventory`.
-- Quit the game by typing `quit`.
+- Navigate through rooms by typing commands like north, south, east, or west.
+- Pick up items by typing take <item>.
+- View your inventory by typing inventory.
+- Solve puzzles presented after each command to progress.
+- Interact with NPCs using the talk command.
+- Check your current quest status by typing quest.
+- Change the weather using the weather command.
+- Save and load your game with save and load commands.
+- View the list of players in multiplayer mode with players.
+- Quit the game by typing quit.
 
 ## Setup
 1. Clone this repository.
@@ -22,14 +28,29 @@ Adventure Game is a simple text-based game where the player navigates through di
 6. Run the game: `python game.py`
 
 ## Example Commands
-- `north`: Move to the room to the north.
-- `take key`: Pick up the key in the current room.
-- `inventory`: Show your current inventory.
-- `look`: Look around the room.
-- `drop [item]`: Drop an item into the room.
-- `inspect [item]`: Inspect an item in your inventory.
-- `help`: Show available commands.
-- `quit`: Exit the game.
+- `north: Move to the room to the north.
+- take key: Pick up the key in the current room.
+- inventory: Show your current inventory.
+- look: Look around the room.
+- drop [item]: Drop an item into the room.
+- inspect [item]: Inspect an item in your inventory.
+- talk: Talk to an NPC.
+- quest: Check your current quest status.
+- save: Save the game.
+- load: Load the game.
+- weather: Change the weather.
+- players: List all players in multiplayer mode.
+- help: Show available commands.
+- quit: Exit the game.
+
+## Features
+- Interactive Puzzles: Solve puzzles to unlock new areas and progress in the game.
+- NPC Interactions: Talk to NPCs to receive quests and clues.
+- Complex Quests: Complete multi-step quests for rewards.
+- Dynamic Weather: Experience changing weather conditions.
+- Achievements: Unlock achievements as you progress.
+- Multiplayer: Play with other players and see who else is in the game.
+
 
 ## Colors in the game
 In this modified code, ANSI escape codes are used to add colors to the game text. Here are the color codes used:
