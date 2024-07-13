@@ -1,7 +1,18 @@
 class Player:
-    def __init__(self):
+    def __init__(self, name):
+        self.name = name
         self.inventory = {}
         self.health = 100
+        self.inventory_limit = 5
+        self.score = 0
+
+    def take_damage(self, amount):
+        self.health -= amount
+        if self.health <= 0:
+            print("You have died.")
+            # End game or restart logic
+        else:
+            print(f"You took {amount} damage. Health is now {self.health}.")
 
     def add_item(self, item):
         self.inventory[item.name] = item
@@ -27,12 +38,6 @@ class Player:
         else:
             print(f"You can't use {item_name}.")
 
-    def take_damage(self, amount):
-        self.health -= amount
-        if self.health <= 0:
-            print("You have died.")
-            return True
-        return False
 
     def heal(self, amount):
         self.health += amount
