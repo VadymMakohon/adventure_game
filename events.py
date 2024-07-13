@@ -1,14 +1,19 @@
 import random
-import time
 
 def random_event(player):
-    events = ["You found a hidden treasure!", "A trap was triggered! You lose 10 health.", "Nothing happens."]
-    event = random.choice(events)
+    events = [
+        ("A trap was triggered! You lose 10 health.", lambda p: p.take_damage(10)),
+        ("You found a health potion! You gain 10 health.", lambda p: p.take_damage(-10)),
+    ]
+    event, action = random.choice(events)
     print(event)
-    if "lose 10 health" in event:
-        player.take_damage(10)
+    action(player)
 
 def timed_event(player):
-    time.sleep(30)  # Wait for 30 seconds
-    print("A mysterious figure appears and gives you a clue!")
-    player.add_score(5)  # Example of adding points for timed events
+    events = [
+        ("A mysterious figure appears and gives you a clue!", lambda p: p.add_score(5)),
+        ("You found a hidden treasure! Your score increases.", lambda p: p.add_score(10)),
+    ]
+    event, action = random.choice(events)
+    print(event)
+    action(player)
