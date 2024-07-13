@@ -4,10 +4,10 @@ from items import Item
 from npc import NPC
 from quests import Quest
 from events import random_event, timed_event
-from save_load import save_game, load_game
 from weather import Weather
 from achievements import Achievement
 from multiplayer import MultiplayerGame
+import random
 
 class Colors:
     RESET = '\033[0m'
@@ -40,6 +40,17 @@ def main():
     multiplayer = MultiplayerGame()
     multiplayer.add_player(player_name)
 
+    def solve_puzzle():
+        puzzles = [
+            ("What has keys but can't open locks?", "piano"),
+            ("What gets wetter as it dries?", "towel"),
+            ("I speak without a mouth and hear without ears. What am I?", "echo"),
+        ]
+        question, correct_answer = random.choice(puzzles)
+        print(Colors.MAGENTA + question)
+        answer = input(Colors.YELLOW + "> ").strip().lower()
+        return answer == correct_answer
+
     while True:
         print(Colors.CYAN + current_room.description)
         print(f"Current weather: {weather.current_condition}")
@@ -50,7 +61,15 @@ def main():
 
         if command in ["north", "south", "east", "west"]:
             if command in current_room.exits:
-                current_room = rooms[current_room.exits[command]]
+                next_room = current_room.exits[command]
+                if current_room.name == "hall" and next_room == "living_room":
+                    if solve_puzzle():
+                        current_room = rooms[next_room]
+                        print(Colors.GREEN + "You solved the puzzle and moved to the living room.")
+                    else:
+                        print(Colors.RED + "Incorrect answer. Try again.")
+                else:
+                    current_room = rooms[next_room]
                 if not achievement.is_unlocked:
                     print(achievement.unlock())
             else:
