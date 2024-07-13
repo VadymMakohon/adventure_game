@@ -22,6 +22,8 @@ class Colors:
 
 # game.py
 
+# game.py
+
 def main():
     player_name = input("Enter your character's name: ")
     player = Player(player_name)
@@ -35,8 +37,11 @@ def main():
     }
 
     current_room = rooms["kitchen"]
+
     npc = NPC("Bob", "Hello! I have a quest for you.")
-    quest = Quest("Find the key", "Find the key hidden in the house.")
+    quest_steps = ["Find the key in the kitchen", "Unlock the door in the hall", "Retrieve the treasure from the secret room"]
+    quest = Quest("Find the Treasure", "Complete the following steps to find the treasure.", quest_steps)
+
     weather = Weather()
     achievement = Achievement("First Step", "Take your first step in the game.")
     multiplayer = MultiplayerGame()
@@ -82,6 +87,8 @@ def main():
             if item:
                 player.add_item(item)
                 print(Colors.GREEN + f"You took the {item.name}.")
+                if item.name == "key" and quest.current_step == 0:
+                    quest.next_step()
             else:
                 print(Colors.RED + f"There is no {item_name} here.")
         elif command == "inventory":
