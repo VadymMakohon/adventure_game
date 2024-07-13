@@ -1,8 +1,10 @@
 from rooms import Room
 from player import Player
-from items import Item, HealingPotion
+from items import Item
 from npc import NPC
-from puzzles import get_random_puzzle
+from quests import Quest
+from events import random_event, timed_event
+from save_load import save_game, load_game
 
 # ANSI escape codes for colors
 class Colors:
@@ -16,56 +18,33 @@ class Colors:
     MAGENTA = '\033[95m'
     CYAN = '\033[96m'
 
-def solve_puzzle():
-    puzzle = get_random_puzzle()
-    print(Colors.MAGENTA + puzzle.question)
-    answer = input(Colors.YELLOW + "> ").strip().lower()
-    if answer == puzzle.answer:
-        print(Colors.GREEN + "Correct!")
-        return True
-    else:
-        print(Colors.RED + "Incorrect. Try again.")
-        return False
-
 def main():
-    # Initialize game elements
-    player = Player()
+    player_name = input("Enter your character's name: ")
+    player = Player(player_name)
 
-    # Define rooms with items and NPCs
     rooms = {
         "kitchen": Room("Kitchen", "You are in a kitchen. There is a door to the north.", {"north": "hall"}),
         "hall": Room("Hall", "You are in a hall. There are doors to the south and east.", {"south": "kitchen", "east": "living_room"}),
         "living_room": Room("Living Room", "You are in a living room. There is a door to the west.", {"west": "hall"}),
     }
 
-    # Add items to rooms
-    rooms["kitchen"].add_item(HealingPotion())
-
-    # Add NPCs to rooms
-    npc = NPC("Old Man", "An old man with a long beard.", "Beware of the dragon in the living room!")
-    rooms["hall"].add_npc(npc)
-
-    puzzle_solved = False
-
     current_room = rooms["kitchen"]
+
+    # Example NPC
+    npc = NPC("Bob", "Hello! I have a quest for you.")
+    quest = Quest("Find the key", "Find the key hidden in the house.")
+
     while True:
-        current_room.describe()
+        print(Colors.CYAN + current_room.description)
         command = input(Colors.YELLOW + "> ").strip().lower()
 
-        if not solve_puzzle():
-            continue
+        # Random event
+        random_event(player)
+        # Timed event (could be checked periodically in the loop)
+        timed_event(player)
 
         if command in ["north", "south", "east", "west"]:
             if command in current_room.exits:
-                if current_room.name == "Hall" and command == "east" and not puzzle_solved:
-                    print(Colors.MAGENTA + "To enter the living room, solve this puzzle: What has keys but can't open locks?")
-                    answer = input(Colors.YELLOW + "> ").strip().lower()
-                    if answer == "piano":
-                        puzzle_solved = True
-                        print(Colors.GREEN + "Correct! You may enter the living room.")
-                    else:
-                        print(Colors.RED + "Incorrect. Try again.")
-                        continue
                 current_room = rooms[current_room.exits[command]]
             else:
                 print(Colors.RED + "You can't go that way.")
@@ -80,7 +59,20 @@ def main():
         elif command == "inventory":
             player.show_inventory()
         elif command == "look":
-            current_room.describe()
+            print(Colors.CYAN + current_room.description)
+        elif command == "talk":
+            print(npc.talk())
+        elif command == "quest":
+            print(quest.description)
+            if not quest.is_completed:
+                quest.complete()
+                player.add_score(10)
+        elif command == "save":
+            save_game(player, current_room)
+            print(Colors.GREEN + "Game saved.")
+        elif command == "load":
+            player, current_room = load_game(rooms)
+            print(Colors.GREEN + "Game loaded.")
         elif command.startswith("drop "):
             item_name = command[5:]
             item = player.remove_item(item_name)
@@ -96,26 +88,18 @@ def main():
                 print(Colors.CYAN + f"{item.name}: {item.description}")
             else:
                 print(Colors.RED + f"You don't have {item_name}.")
-        elif command.startswith("use "):
-            item_name = command[4:]
-            player.use_item(item_name)
-        elif command.startswith("talk to "):
-            npc_name = command[8:]
-            npc = current_room.get_npc(npc_name)
-            if npc:
-                npc.talk()
-            else:
-                print(Colors.RED + f"There is no one named {npc_name} here.")
         elif command == "help":
             print(Colors.CYAN + "Available commands:")
             print(Colors.CYAN + " - north, south, east, west: Move in the specified direction.")
             print(Colors.CYAN + " - take [item]: Take an item from the room.")
             print(Colors.CYAN + " - drop [item]: Drop an item into the room.")
             print(Colors.CYAN + " - inspect [item]: Inspect an item in your inventory.")
-            print(Colors.CYAN + " - use [item]: Use an item from your inventory.")
-            print(Colors.CYAN + " - talk to [npc]: Talk to an NPC in the room.")
             print(Colors.CYAN + " - look: Look around the room.")
             print(Colors.CYAN + " - inventory: Show your inventory.")
+            print(Colors.CYAN + " - talk: Talk to an NPC.")
+            print(Colors.CYAN + " - quest: Check your current quest.")
+            print(Colors.CYAN + " - save: Save the game.")
+            print(Colors.CYAN + " - load: Load the game.")
             print(Colors.CYAN + " - help: Show this help message.")
             print(Colors.CYAN + " - quit: Quit the game.")
         elif command == "quit":
