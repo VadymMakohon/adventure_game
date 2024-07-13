@@ -20,21 +20,23 @@ class Colors:
     MAGENTA = '\033[95m'
     CYAN = '\033[96m'
 
+# game.py
+
 def main():
     player_name = input("Enter your character's name: ")
     player = Player(player_name)
 
     rooms = {
         "kitchen": Room("Kitchen", "You are in a kitchen. There is a door to the north.", {"north": "hall"}),
-        "hall": Room("Hall", "You are in a hall. There are doors to the south and east.", {"south": "kitchen", "east": "living_room"}),
+        "hall": Room("Hall", "You are in a hall. There are doors to the south, east, and west.", {"south": "kitchen", "east": "living_room", "west": "library"}),
         "living_room": Room("Living Room", "You are in a living room. There is a door to the west.", {"west": "hall"}),
+        "library": Room("Library", "You are in a library. There are doors to the east and north.", {"east": "hall", "north": "secret_room"}),
+        "secret_room": Room("Secret Room", "You are in a secret room filled with treasures.", {"south": "library"})
     }
 
     current_room = rooms["kitchen"]
-
     npc = NPC("Bob", "Hello! I have a quest for you.")
     quest = Quest("Find the key", "Find the key hidden in the house.")
-
     weather = Weather()
     achievement = Achievement("First Step", "Take your first step in the game.")
     multiplayer = MultiplayerGame()
