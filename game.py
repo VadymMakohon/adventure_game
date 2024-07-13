@@ -5,8 +5,10 @@ from npc import NPC
 from quests import Quest
 from events import random_event, timed_event
 from save_load import save_game, load_game
+from weather import Weather
+from achievements import Achievement
+from multiplayer import MultiplayerGame
 
-# ANSI escape codes for colors
 class Colors:
     RESET = '\033[0m'
     BOLD = '\033[1m'
@@ -30,22 +32,27 @@ def main():
 
     current_room = rooms["kitchen"]
 
-    # Example NPC
     npc = NPC("Bob", "Hello! I have a quest for you.")
     quest = Quest("Find the key", "Find the key hidden in the house.")
 
+    weather = Weather()
+    achievement = Achievement("First Step", "Take your first step in the game.")
+    multiplayer = MultiplayerGame()
+    multiplayer.add_player(player_name)
+
     while True:
         print(Colors.CYAN + current_room.description)
+        print(f"Current weather: {weather.current_condition}")
         command = input(Colors.YELLOW + "> ").strip().lower()
 
-        # Random event
         random_event(player)
-        # Timed event (could be checked periodically in the loop)
         timed_event(player)
 
         if command in ["north", "south", "east", "west"]:
             if command in current_room.exits:
                 current_room = rooms[current_room.exits[command]]
+                if not achievement.is_unlocked:
+                    print(achievement.unlock())
             else:
                 print(Colors.RED + "You can't go that way.")
         elif command.startswith("take "):
@@ -73,6 +80,10 @@ def main():
         elif command == "load":
             player, current_room = load_game(rooms)
             print(Colors.GREEN + "Game loaded.")
+        elif command == "weather":
+            weather.change_weather()
+        elif command == "players":
+            multiplayer.list_players()
         elif command.startswith("drop "):
             item_name = command[5:]
             item = player.remove_item(item_name)
@@ -100,6 +111,8 @@ def main():
             print(Colors.CYAN + " - quest: Check your current quest.")
             print(Colors.CYAN + " - save: Save the game.")
             print(Colors.CYAN + " - load: Load the game.")
+            print(Colors.CYAN + " - weather: Change the weather.")
+            print(Colors.CYAN + " - players: List all players.")
             print(Colors.CYAN + " - help: Show this help message.")
             print(Colors.CYAN + " - quit: Quit the game.")
         elif command == "quit":
